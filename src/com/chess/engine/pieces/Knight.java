@@ -14,7 +14,7 @@ public class Knight extends Piece{
     }
 
     @Override
-    public List<Move> calculateLegalMoves(final Board board) {
+    public Collection<Move> calculateLegalMoves(final Board board) {
 
         int candidateDestinationCoordinate;
         final List<Move> legalMoves = new ArrayList<>();
