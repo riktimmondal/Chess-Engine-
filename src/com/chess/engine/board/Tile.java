@@ -2,7 +2,7 @@ package com.chess.engine.board;
 
 import com.chess.engine.pieces.*;
 import java.util.*;
-import com.google.*;
+import com.google.common.collect.ImmutableMap;
 
 public abstract class Tile {
 
@@ -23,7 +23,7 @@ public abstract class Tile {
 
     //factory method which is the only method user can access
     public static Tile createTile(final int tileCoordinate, Piece piece) {
-        return piece != null ? new OccupiedTile(tileCoordinate, piece) : EmptyTile.get(tileCoordinate);
+        return piece != null ? new OccupiedTile(tileCoordinate, piece) : EMPTY_TILES_CACHE.get(tileCoordinate);
     }
 
     private Tile(final int tileCoordinate) {
@@ -36,6 +36,11 @@ public abstract class Tile {
     public static final class EmptyTile extends Tile {
         private EmptyTile(final int coordinate) {
             super(coordinate);
+        }
+
+        @Override
+        public String toString() {
+            return "-";
         }
 
         @Override
@@ -55,6 +60,12 @@ public abstract class Tile {
         private OccupiedTile(final int tileCoordinate, final Piece pieceOnTile) {
             super(tileCoordinate);
             this.pieceOnTile = pieceOnTile;
+        }
+
+        @Override
+        public String toString() {
+            return getPiece().getPieceAlliance().isBlack() ? getPiece().toString().toLowerCase()
+            : getPiece().toString();
         }
 
         @Override

@@ -1,16 +1,22 @@
 package com.chess.engine.pieces;
 
-import com.chess.engine.*;
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import java.util.*;
+import com.chess.engine.Alliance;
+import com.chess.engine.board.Board;
+import com.chess.engine.board.BoardUtils;
+import com.chess.engine.board.Move;
+import com.chess.engine.board.Tile;
+import com.google.common.collect.ImmutableList;
 
 public class King extends Piece{
 
     private final static int[] CANDIDATA_MOVE_COORDINATES = {-9,-8,-7,-1,1,7,8,9};
 
-    King(final int piecePosition, final Alliance pieceAlliance) {
-        super(piecePosition, pieceAlliance);
+    public King(final Alliance pieceAlliance, final int piecePosition) {
+        super(pieceType.KING, piecePosition, pieceAlliance);
     }
 
     @Override
@@ -25,7 +31,7 @@ public class King extends Piece{
                 continue;
             }
 
-            if(BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate) {
+            if(BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
                 final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
                 if(!candidateDestinationTile.isTileOccupied()) {
                     legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));
@@ -33,11 +39,16 @@ public class King extends Piece{
                     final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                     final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                     if(this.pieceAlliance != pieceAlliance)
-                        legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate));
+                        legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                 }
             }
         }
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return PieceType.KING.toString();
     }
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {
